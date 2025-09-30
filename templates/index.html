@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html class="w-full h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Name Selection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-800 text-white h-full w-full flex flex-col">
+    <header class="p-5 w-full flex justify-between items-center">
+        <div class="left">
+            <h1 class="font-medium text-xl">RotteN Springbok</h1>
+            <h2>Random Name Selection</h2>
+        </div>
+        <img src="https://public.svsticky.nl/logos/logo_compact_outline_wit.svg" class="h-24">
+    </header>
+    <main class="flex justify-center items-center flex-grow">
+        <form action="/" method="POST" enctype="multipart/form-data" class="w-96">
+            <label for="file" class="block mb-1">Upload CSV file:</label>
+            <input type="file" name="file" id="file" accept=".csv" required class="block rounded w-full mb-5 bg-gray-900 file:mr-5 file:p-2.5 file:font-medium file:bg-blue-600 file:border-none file:text-white hover:file:cursor-pointer hover:file:bg-blue-50 hover:file:text-blue-700">
+
+            <label for="num_people" class="block mb-1">Number of people to select:</label>
+            <input type="number" name="num_people" id="num_people" min="1" required class="block rounded w-full p-2.5 mb-5 bg-gray-900 text-center">
+
+            <!-- Dropdown for delay in seconds (converted to milliseconds in the backend) -->
+            <label for="delay" class="block mb-1">Reveal delay (seconds):</label>
+            <select name="delay" id="delay" required class="block rounded w-full p-2.5 mb-5 bg-gray-900 text-center">
+                <option value="1">1 second</option>
+                <option value="2">2 seconds</option>
+                <option value="3">3 seconds</option>
+                <option value="4">4 seconds</option>
+                <option value="5">5 seconds</option>
+            </select>
+
+            <button type="submit" class="block text-lg font-medium bg-blue-600 p-2.5 w-full rounded-lg hover:bg-blue-50 hover:text-blue-700">Start!</button>
+        </form>
+    </main>
+</body>
+
+</html>

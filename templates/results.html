@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html class="w-full h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Name Selection - Results</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script type="text/javascript">
+        window.onload = function() {
+            function revealNames(elementId, delay) {
+                // Show names
+                const names = document.querySelectorAll(`#${elementId} .name`);
+                let index = 0;
+
+                const interval = setInterval(() => {
+                    if (index < names.length) {
+                        names[index].style.display = 'block'; // Show the name
+                        index++;
+                    } else {
+                        clearInterval(interval); // Stop the interval when all names are shown
+                    }
+                }, delay);
+            }
+
+            // Get the delay value from the server (passed from Flask)
+            const delay = {{ delay }}; 
+
+            // Reveal selected names with the delay specified by the user
+            revealNames('selected-people', delay);
+            // Reveal remaining names after the selected names with the same delay
+            setTimeout(() => {
+                document.getElementById('remaining-people-header').style.display = 'block';
+                revealNames('remaining-people', delay);
+            }, delay * {{ 1 + selected_people|length }});
+        };
+    </script>
+</head>
+
+<body class="bg-gray-800 text-white h-full w-full flex flex-col">
+    <header class="p-5 w-full flex justify-between items-center">
+        <div class="left">
+            <h1 class="font-medium text-xxl">RotteN Springbok</h1>
+            <h2>Random Name Selection</h2>
+        </div>
+        <img src="https://public.svsticky.nl/logos/logo_compact_outline_wit.svg" class="h-24">
+    </header>
+    <nav class="justify-center mb-3 flex gap-3 text-gray-400">
+        <a href="/" class="underline hover:text-white">Go back</a>
+        <a href="{{ url_for('download_file', filename=results_filename) }}" class="underline hover:text-white">Download CSV</a> <!-- Download button -->
+    </nav>
+    <main class="text-center">
+        <h3 class="text-3xl font-bold mb-2">Selected People</h3>
+        <div id="selected-people">
+            {% for person in selected_people %}
+            <div class="name hidden text-lg">{{ person }}</div>
+            {% endfor %}
+        </div>
+
+        <h3 id="remaining-people-header" class="hidden text-3xl font-bold mt-5 mb-2">Remaining People</h3>
+        <div id="remaining-people">
+            {% for person in remaining_people %}
+            <div class="name hidden text-lg">{{ person }}</div>
+            {% endfor %}
+        </div>
+    </main>
+
+</body>
+
+</html>
