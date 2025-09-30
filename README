@@ -10,3 +10,7 @@ For development: docker compose -f docker-compose.dev.yml up --build
 For production: docker compose -f docker-compose.prod.yml up --build
 
 After starting, you can find the application on localhost:<port in the .env>
+
+# CSV
+
+The format of the CSV to upload must have a column named "Name" with the names below it.
