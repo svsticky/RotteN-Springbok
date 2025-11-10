@@ -18,3 +18,5 @@ services:
     volumes:
       - ./uploads:/app/uploads
       - ./results:/app/results
+    extra_hosts:
+      - "koala.dev.svsticky.nl:5.75.177.125"
