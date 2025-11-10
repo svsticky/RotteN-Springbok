@@ -5,6 +5,14 @@ services:
     build: .
     container_name: RotteN_Springbok
     restart: always
+    environment:
+      - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID:-client-id}
+      - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET:-client-secret}
+      - OAUTH_REDIRECT_URL=${OAUTH_REDIRECT_URL:-http://localhost:8000/auth/callback}
+      - OAUTH_AUTHORIZE_URL=${OAUTH_AUTHORIZE_URL:-https://example.com/oauth/authorize}
+      - OAUTH_TOKEN_URL=${OAUTH_TOKEN_URL:-https://example.com/oauth/token}
+      - OAUTH_API_BASE_URL=${OAUTH_API_BASE_URL:-https://example.com/api/}
+      - SECRET_KEY=${SECRET_KEY:-supersecretkey}
     ports:
       - "${HOST_PORT:-8000}:8000"
     volumes:

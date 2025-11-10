@@ -1,4 +1,7 @@
 flask
+flask-dance
+authlib
 pandas
 gunicorn
 werkzeug
+requests

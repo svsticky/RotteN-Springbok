@@ -8,3 +8,7 @@ The application works with docker. Make sure you have docker installed and runni
 docker compose up --build
 
 After starting, you can find the application on localhost:<port in the .env>
+
+# CSV
+
+The format of the CSV to upload must have a column named "Name" with the names below it.
