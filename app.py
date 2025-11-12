@@ -158,6 +158,10 @@ def index():
                                        results_filename=results_filename, 
                                        delay=delay_ms)  # Pass the delay in milliseconds
             except Exception as e:
+                try:
+                    os.remove(filepath)
+                except Exception:
+                    pass
                 flash(str(e))
                 return redirect(request.url)
     return render_template('index.html')
