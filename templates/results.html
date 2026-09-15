@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Name Selection - Results</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
     <script type="text/javascript">
         window.onload = function() {
-            function revealNames(elementId, delay) {
+            function revealNames(elementId, delay, onComplete) {
                 // Show names
                 const names = document.querySelectorAll(`#${elementId} .name`);
                 let index = 0;
@@ -20,15 +21,47 @@
                         index++;
                     } else {
                         clearInterval(interval); // Stop the interval when all names are shown
+                        if (onComplete) onComplete();
                     }
                 }, delay);
             }
 
-            // Get the delay value from the server (passed from Flask)
-            const delay = {{ delay }}; 
+            // Celebrate once all the selected people have been revealed
+            function celebrate() {
+                if (typeof confetti !== 'function') return;
 
-            // Reveal selected names with the delay specified by the user
-            revealNames('selected-people', delay);
+                const duration = 3 * 1000;
+                const animationEnd = Date.now() + duration;
+                const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+
+                function randomInRange(min, max) {
+                    return Math.random() * (max - min) + min;
+                }
+
+                const interval = setInterval(() => {
+                    const timeLeft = animationEnd - Date.now();
+
+                    if (timeLeft <= 0) {
+                        return clearInterval(interval);
+                    }
+
+                    const particleCount = 50 * (timeLeft / duration);
+                    confetti(Object.assign({}, defaults, {
+                        particleCount,
+                        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+                    }));
+                    confetti(Object.assign({}, defaults, {
+                        particleCount,
+                        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+                    }));
+                }, 250);
+            }
+
+            // Get the delay value from the server (passed from Flask)
+            const delay = {{ delay }};
+
+            // Reveal selected names with the delay specified by the user, then celebrate
+            revealNames('selected-people', delay, celebrate);
             // Reveal remaining names after the selected names with the same delay
             setTimeout(() => {
                 document.getElementById('remaining-people-header').style.display = 'block';
