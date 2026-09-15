@@ -66,8 +66,24 @@ def cleanup_old_results(days=1):
                     print(f"⚠️ Failed to delete {filename}: {e}")
 
 def select_and_process_csv(input_csv_path, column_name="Name", n=45):
-    df = pd.read_csv(input_csv_path)
-    
+    # Detect the delimiter based on the header line: the newer export
+    # format uses ';', older exports use ','.
+    with open(input_csv_path, 'r', encoding='utf-8-sig') as f:
+        header_line = f.readline()
+    delimiter = ';' if ';' in header_line else ','
+
+    df = pd.read_csv(input_csv_path, sep=delimiter)
+
+    # Newer export format splits the name into "First Name" and "Last Name"
+    # columns, and may include extra columns (e.g. "On Waiting List",
+    # "Pizza preference") that we don't care about here. Combine the first
+    # and last name into a single "Name" column so the rest of the logic
+    # (and the output format) stays unchanged.
+    if 'First Name' in df.columns and 'Last Name' in df.columns:
+        first_names = df['First Name'].astype(str).str.strip()
+        last_names = df['Last Name'].astype(str).str.strip()
+        df[column_name] = (first_names + ' ' + last_names).str.strip()
+
     # Ensure the column exists
     if column_name not in df.columns:
         raise ValueError(f"Column '{column_name}' not found in the CSV file")
